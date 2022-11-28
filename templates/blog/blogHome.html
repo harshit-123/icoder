@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Home Page - Blog{% endblock title %}
+{% block blogactive %} active {% endblock blogactive %}
+{% block body %}
+<div class="container my-4">
+    <h3 class="pb-4 mb-4 fst-italic">Coding Articles By: iCoder Community</h3>
+    <div class="row mb-2">
+      {% for post in allPosts %}
+        <div class="col-md-6">
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-primary">{{post.category}}</strong>
+              <h3 class="mb-0">{{post.title| truncatechars:20}}</h3>
+              <div class="mb-1 text-muted">{{post.timestamp}}</div>
+              <p class="card-text mb-auto">{{post.content| truncatechars:91}}</p>
+              <a href="{{post.slug}}" class="stretched-link"><button class="btn btn-primary">Read More</button></a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <img width="200" height="250" class="bd-placeholder-img" src="../media/{{post.blog_image}}"/>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock body %}
