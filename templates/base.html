@@ -11,7 +11,7 @@
     <title>{% block title %}{% endblock title %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div class="container-fluid">
         <a class="navbar-brand" href="/">iCoder</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,18 @@
             <input name="query" id="search" class="form-control me-2" type="search" placeholder="Search Blogs" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
+          {% if user.is_authenticated %}
+          <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Welcome {{request.user}}
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
           <!-- Button to trigger Login modal -->
           <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
             Login
@@ -44,6 +56,8 @@
           <button type="button" class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#signupModal">
             SignUp
           </button>
+          {% endif %}
+          
         </div>
       </div>
     </nav>
@@ -117,7 +131,7 @@
                 <label for="loginpass" class="form-label">Password</label>
                 <input type="password" class="form-control" id="loginpass" name="loginpass" placeholder="Enter Password">
               </div>
-              <button type="button" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
         </div>
