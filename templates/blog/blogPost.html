@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Blog Post{% endblock title %}
 {% block body %}
+{% load humanize %}
+{% load extras %}
 <div class="container">
     <div class="row g-5 my-1">
       <div class="col-md-8">
         <h2 class="pb-4 mb-4 fst-italic border-bottom">{{post.title}}</h2>
         <article class="blog-post">
           <h3 class="blog-post-title mb-1">{{post.heading}}</h3>
-          <p class="blog-post-meta">{{post.timestamp}} by <a href="#">{{post.author}}</a></p>
-          <p>{{post.content}}</p>
+          <p class="blog-post-meta">{{post.timestamp}} by <a href="#">{{post.author}}</a> <span><i class="fa-regular fa-eye"></i> {{post.views}} views</span></p>
+          <p>{{post.content|safe}}</p>
       </article>
       </div>
       <div class="col-md-4">
@@ -39,8 +41,6 @@
         <h2>Comments ({{comments.count}})</h2>
         <div class="row">
           <form action="/blog/postComment" method="POST">
-            {% load humanize %}
-            {% load extras %}
             {% csrf_token %}
             {% if user.is_anonymous %}
               <div class="alert alert-warning" role="alert">
@@ -64,7 +64,7 @@
                 </div>
                 <div class="col-md-11">
                   <b>{{comment.user.username}} </b> at {{comment.timestamp | naturaltime}}
-                  <div>{{comment.comment}}</div>
+                  <div>{{comment.comment|safe}}</div>
                   {% if not user.is_anonymous %}
                   <p>
                     <a class="btn btn-secondary btn-sm mt-2" data-bs-toggle="collapse" href="#commentReply{{comment.sno}}" role="button" aria-expanded="false" aria-controls="commentReply">
@@ -73,9 +73,10 @@
                   </p>
                   <div class="collapse" id="commentReply{{comment.sno}}">
                     <form action="/blog/postComment" method="POST">
-                      <textarea name="comment" id="comment" cols="30" rows="2" class="form-control" placeholder="Add a reply..."></textarea>
-                      <input type="hidden" name="parentSno" value="{{comment.sno}}">
-                      <input type="hidden" name="postSno" id="postSno" value="{{post.sno}}">
+                      {% csrf_token %}
+                      <textarea name="commentReply" id="commentReply" cols="30" rows="2" class="form-control" placeholder="Add a reply..."></textarea>
+                      <input type="hidden" name="parentSnoReply" value="{{comment.sno}}">
+                      <input type="hidden" name="postSnoReply" id="postSnoReply" value="{{post.sno}}">
                       <button type="submit" name="submit" class="btn btn-outline-primary btn-sm mt-2">Reply</button>
                       <a class="btn btn-outline-secondary btn-sm mt-2" data-bs-toggle="collapse" href="#commentReply{{comment.sno}}" role="button" aria-expanded="false" aria-controls="commentReply">
                         Cancel

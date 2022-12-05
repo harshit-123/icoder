@@ -17,6 +17,7 @@ class Post(models.Model):
     sno         = models.AutoField(primary_key=True)
     title       = models.CharField(max_length=255)
     content     = models.TextField()
+    views       = models.IntegerField(default=0)
     author      = models.CharField(max_length=255)
     blog_image  = models.ImageField(upload_to="blog/img", default="")
     category    = models.CharField(max_length=255, choices=diff_category, null=True, blank=True)

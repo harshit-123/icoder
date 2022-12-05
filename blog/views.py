@@ -12,6 +12,8 @@ def bloghome(request):
 
 def blogPost(request, slug):
     post = Post.objects.filter(slug= slug)[0]
+    post.views = post.views + 1
+    post.save()
     comments = BlogComment.objects.filter(post= post, parent=None)
     replies = BlogComment.objects.filter(post= post).exclude(parent=None)
     replyDict = {}
@@ -20,7 +22,6 @@ def blogPost(request, slug):
             replyDict[reply.parent.sno] = [reply]
         else:
             replyDict[reply.parent.sno].append(reply)
-    print("replyDict===>",replyDict)
     params = {
         "post": post,
         "comments": comments,
@@ -32,21 +33,21 @@ def blogPost(request, slug):
 def postComment(request):
     if request.method == 'POST':
         comment = request.POST.get("comment")
-        print("comment===>", comment)
+        commentReply = request.POST.get("commentReply")
         user = request.user
         postSno = request.POST.get("postSno")
-        post = Post.objects.get(sno=postSno)
+        postSnoReply = request.POST.get("postSnoReply")
         parentSno = request.POST.get("parentSno")
-        print("parent_sno==>",parentSno)
-        if parentSno =="":
-            print("parent sno in if==>",parentSno)
+        parentSnoReply = request.POST.get("parentSnoReply")
+        if parentSno=="":
+            post = Post.objects.get(sno=postSno)
             comment = BlogComment(comment = comment, user = user, post = post)
             comment.save()
             messages.success(request, "Your comment has been Posted Successfully!")
         else:
-            print("parent sno in else==>", parentSno)
-            parent = BlogComment.objects.get(sno=parentSno)
-            comment = BlogComment(comment = comment, user = user, post = post, parent = parent)
+            post = Post.objects.get(sno=postSnoReply)
+            parent = BlogComment.objects.get(sno=parentSnoReply)
+            comment = BlogComment(comment = commentReply, user = user, post = post, parent = parent)
             comment.save()
             messages.success(request, "Your Reply has been posted successfully!")
     return redirect(f"/blog/{post.slug}")

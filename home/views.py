@@ -97,5 +97,5 @@ def handleLogin(request):
 
 def handleLogout(request):
     logout(request)
-    messages.success(request, "Successfully Logged out!")
+    messages.warning(request, "Successfully Logged out!")
     return redirect("/")
